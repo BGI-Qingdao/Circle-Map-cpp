@@ -1,5 +1,5 @@
 # Circle-Map-cpp
-rewirte part of Realign module in Circle-Map by c++
+rewrite part of Realign module in Circle-Map by c++
 
 ## what is Circle-Map ?
 
