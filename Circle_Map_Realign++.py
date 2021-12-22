@@ -210,7 +210,7 @@ class circle_map_cpp:
             description='Circle-Map++Realign',
             usage='''Circle-Map++Realign <subprogram> [options]
 
-version=1.0.0
+version=0.1.0
 contact= https://github.com/BGI-Qingdao/Circle-Map++/issues
 
 The Circle-Map++Realign
