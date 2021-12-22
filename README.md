@@ -12,7 +12,7 @@ see https://github.com/iprada/Circle-Map and https://github.com/BGI-Qingdao/Circ
   * g++
   * make
 * htslib
-* python libraries 
+* python3 with libraries 
   * pysam
   * pybedtools
   * argparse
