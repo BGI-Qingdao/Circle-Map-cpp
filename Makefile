@@ -12,7 +12,7 @@ realign_cm: realign_cm.cpp  utils/incr_array.h utils/MultiThread.h  edlib.o util
 
 merge_result: merge_result.cpp
 	g++ -std=c++11 -g -c -Wall merge_result.cpp -o merge_result.o
-	g++ -std=c++11 merge_result.o -o merge_result 
+	g++ -std=c++11 merge_result.o  -lpthread  -o merge_result 
         
 
 clean:

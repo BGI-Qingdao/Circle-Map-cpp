@@ -49,9 +49,9 @@ Candidate intervals:
                         Cluster reads that are K nucleotides appart in the same node. Default: 500
 
 Insert size estimation options:
-  -ss , --sample_size   Number of concordant reads (R2F1) to use for estimating the insert size distribution. Default 100000
+  -ss , --sample_size   Number of concordant reads (R2F1) to use for estimating the insert size distribution.
+                        Default 100000
   -iq , --insert_mapq   Mapq cutoff for stimating the insert size distribution. Default 60
-  -sd , --std           Standard deviations of the insert size to extend the intervals. Default 5
 
 Interval processing options:
   -m , --mean_is_size   mean value of insert size
@@ -72,7 +72,9 @@ Interval processing options:
                         penity for gap extern(default 1)
   -P , --aln_prob       alignment probability(default 0.99)
 
-check_1bp_cov:
+Merge result options:
+  -f , --merge_fraction
+                        Merge intervals reciprocally overlapping by a fraction. Default 0.99
   -af , --allele_frequency
                         Minimum allele frequency required to report the circle interval. Default (0.1)
   -O , --number_of_discordants
@@ -80,15 +82,7 @@ check_1bp_cov:
   -T , --split          Number of required split reads to output a eccDNA. Default: 0
   -Q , --split_quality
                         Minium split score to output an interval. Default (0.0)
-
-Merge result options:
-  -f , --merge_fraction
-                        Merge intervals reciprocally overlapping by a fraction. Default 0.99
-
-Coverage metrics options:
   -bs , --bases         Number of bases to extend for computing the coverage ratio. Default: 200
-  -cq , --cmapq         Minimum mapping quality treshold for coverage computation. Default: 0
   -ce , --extension     Number of bases inside the eccDNA breakpoint coordinates to compute the ratio. Default: 100
   -r , --ratio          Minimum in/out required coverage ratio. Default: 0.0
-
 ```

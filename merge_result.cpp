@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cmath>
 #include <unistd.h>
+#include "utils/MultiThread.h"
 //*******************
 static int threadnum = 8;
 static float af = 0.1;
@@ -297,20 +298,27 @@ struct eccCache
 
     void get_ratio()
     {
+        BGIQD::MultiThread::MultiThread mt;
         for(auto & pair :eccs)
         {
             std::string ref = pair.first;
             auto & cache = pair.second;
             for(size_t i = 1 ; i<cache.size(); i++ )
             {
+                
                 auto & ecc = cache[i];
-                int start = ecc.begin;
-                int end = ecc.end;
-                auto covs = cov_cache.cov_region(ref,start,end);
-                auto ext_covs = cov_cache.cov_region(ref,start-ext,end+ext);
-                ecc.update(covs,ext_covs);                 
+                eccFinal* the_ecc= &ecc;
+                mt.AddJob([ref,the_ecc](){
+                    int start = the_ecc->begin;
+                    int end = the_ecc->end;
+                    auto covs = cov_cache.cov_region(ref,start,end);
+                    auto ext_covs = cov_cache.cov_region(ref,start-ext,end+ext);
+                    the_ecc->update(covs,ext_covs);                 
+                });
             }
         }
+        mt.Start(threadnum);
+        mt.WaitingStop();
     }
 
     void check_ratio()
