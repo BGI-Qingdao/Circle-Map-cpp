@@ -696,15 +696,11 @@ struct all_caches
          if( itr == chromesomes.end() )
          {
               hts_log_error("Error: genome not match bam!  \"%s\" not found. exit... ", chrname.c_str());
-              //exit(1);
               return "";
          }
-         if( end<= start || start < 0 || end >= hts_pos_t(itr->second.l) )
-         {
-              hts_log_error("genome not match interval !  \"%s\" and interval [ %d ,%d ) . exit... ", chrname.c_str(),int(start),int(end));
-              //exit(1);
-              return "";
-         }
+         if (end<= start) return "";
+         if(start < 0 ) return "";
+         if(end >= hts_pos_t(itr->second.l)) end = hts_pos_t(itr->second.l)-1; 
          return upper(itr->second.s + start , end-start);
     }
     
