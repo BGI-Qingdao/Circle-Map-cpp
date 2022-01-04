@@ -155,7 +155,7 @@ struct eccCache
                     if( ecctemp.nsplit < nsplit ||  ecctemp.score <= score ) continue;
                 }
                 int count_begin = cov_cache.cov_at(ref,ecctemp.begin);
-                int count_end = cov_cache.cov_at(ref,ecctemp.end);
+                int count_end = cov_cache.cov_at(ref,ecctemp.end-1);
                 float meancov = (float(count_begin)+float(count_end)+0.01)/2.0 ;
                 if( ecctemp.nsplit < 1 )
                 {
@@ -235,14 +235,14 @@ struct eccCache
             if(in_cov.empty() || ext_cov.empty()) return ;
             if(in_cov.size() >1)
             {
-                int sum = 0;
+                long long sum = 0;
                 for(int x : in_cov) sum += x ;
-                if( sum > 0 ) mean = float(sum)/float(in_cov.size());
+                if( sum > 0 ) mean = double(sum)/double(in_cov.size());
                 if( mean > 0 ) 
                 {
-                    int sd = 0 ;
+                    double sd = 0 ;
                     for(int x : in_cov) sd += ((x-mean)*(x-mean));
-                    std = sqrt(float(sd)/float(in_cov.size()-1));          
+                    std = sqrt(double(sd)/double(in_cov.size()-1));          
                 }
             }
             else
@@ -271,7 +271,7 @@ struct eccCache
             if( cov_end_ext >0.0 ) end_ratio = cov_end_in/cov_end_ext;
             int nonzero = 0;
             for(int x : in_cov) if( x>0 ) nonzero ++;
-            contigunity = float(nonzero)/float(in_cov.size());
+            contigunity = 1.0 - float(nonzero)/float(in_cov.size());
         }
     };
 

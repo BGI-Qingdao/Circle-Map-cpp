@@ -526,7 +526,7 @@ struct eccTemp
         {
             cut_begin = pos_begin;
             const char * cigar = sa_tmp.s + offset[3];
-            cut_end = leftmost_sa -1 + infer_mapped_ref_length_from_cigar(cigar) -1 ;
+            cut_end = leftmost_sa -1 + infer_mapped_ref_length_from_cigar(cigar) ;
         }
         else if( pos_begin > leftmost_sa )
         {
@@ -880,8 +880,8 @@ struct discordant
               if( temp.reference_start < cut_end )
               {
                   discordant_read_count ++ ;
-                  if ( temp.next_reference_end_q > cut_end )
-                      cut_end = temp.next_reference_end_q;
+                  //if ( temp.next_reference_end_q > cut_end )
+                  cut_end = temp.next_reference_end_q;
                   qnames.insert(temp.qname);
                   return true;
               }
@@ -891,8 +891,8 @@ struct discordant
               if( temp.next_reference_start < cut_end )
               {
                   discordant_read_count ++ ;
-                  if ( temp.reference_end_q > cut_end )
-                      cut_end = temp.reference_end_q;
+                  //if ( temp.reference_end_q > cut_end )
+                  cut_end = temp.reference_end_q;
                   qnames.insert(temp.qname);
                   return true;
               }
