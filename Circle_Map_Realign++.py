@@ -220,12 +220,20 @@ Commands:
             if sys.argv[1] == "Realign":
                 self.subprogram = self.args_realigner()
                 self.args = self.subprogram.parse_args(sys.argv[2:])
+                if self.temp_folder() == self.args.directory:
+                    self.need_delete = True
+                else:
+                    self.need_delete = False
+                if not os.path.exists(self.args.directory):    
+                    os.mkdir(self.args.directory)
 
                 candidate_intervals(self.args)
                 mean, std=insert_size_est(self.args)
                 realign_cm(self.args, mean, std)
                 get_sbam_coverage(self.args)
                 merge_result(self.args)
+                if self.need_delete:
+                     os.system("rm -rf %s" % self.args.directory)
                 print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:"),"Realign all done\n",flush=True)   
             else:
                 self.parser.print_help()
@@ -233,6 +241,12 @@ Commands:
                 sys.stderr.write("\nWrong argument given to Circle-Map"
                                      "\nExiting\n")
                 sys.exit(0)
+
+    def temp_folder(self):
+        base_folder=os.getcwd()
+        pid = os.getpid()
+        return f'{base_folder}/temp_{pid}';
+        
 
     def args_realigner(self):
         parser = self.realigner
@@ -260,8 +274,8 @@ Commands:
         running.add_argument('-t', '--threads', type=int, default=1, metavar='',
                                      help="Number of threads to use.Default 1",
                                      )
-        running.add_argument('-dir', '--directory', default=os.getcwd(), metavar='',
-                                     help="Working directory, default is the working directory",
+        running.add_argument('-dir', '--directory', default=self.temp_folder(), metavar='',
+                                     help="Working directory, default will create a tmp_${pid} folder in the working directory and automaticlly delete it when exit.. ",
                                      )
         running.add_argument('-N', '--no_coverage', help="Don't compute coverage statistics",  
                           action='store_true')                                              
