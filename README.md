@@ -1,5 +1,5 @@
 # Circle-Map-cpp
-rewrite part of Realign module in Circle-Map by c++
+rewrite part of in Circle-Map by c++
 
 ## what is Circle-Map ?
 
@@ -14,10 +14,8 @@ see https://github.com/iprada/Circle-Map and https://github.com/BGI-Qingdao/Circ
 * htslib
 * python3 with libraries 
   * pysam
-  * pybedtools
   * argparse
   * numpy
-  * pandas
   
 ## install 
 
@@ -25,10 +23,44 @@ see https://github.com/iprada/Circle-Map and https://github.com/BGI-Qingdao/Circ
 make
 ```
 
-## usage 
+## basic usage 
 
 ```
-usage: Circle-Map Realign [options]
+Usage: circle-map++ <subprogram> [options]
+
+Commands:
+   ReadExtractor   Extracts circular DNA read candidates
+   Realign         Realign circular DNA read candidates
+
+```
+## ReadExtractor usage
+
+```
+usage: circle-map++ ReadExtractor [options]
+
+Extracts circular DNA read candidates
+
+required arguments:
+  -i                    Input: query name sorted bam file
+
+optional arguments:
+  -o , --output         Ouput: Reads indicating circular DNA structural variants
+  -t , --threads        Number of threads to use.Default 1
+  -dir , --directory    Working directory, default is the working directory
+  -q , --quality        bwa-mem mapping quality cutoff. Default value 10
+  -nd, --nodiscordant   Turn off discordant (R2F1 oriented) read extraction
+  -nsc, --nosoftclipped
+                        Turn off soft-clipped read extraction
+  -nhc, --nohardclipped
+                        Turn off hard-clipped read extraction
+  -v , --verbose        Verbose level, 1=error,2=warning, 3=message
+
+```
+
+## Realign usage
+
+```
+usage: circle-map++ Realign [options]
 
 Realign circular DNA read candidates
 
@@ -41,7 +73,7 @@ Input/Output options:
 
 Running options:
   -t , --threads        Number of threads to use.Default 1
-  -dir , --directory    Working directory, default is the working directory
+  -dir , --directory    Working directory, default will create a tmp_${pid} folder in the working directory and automaticlly delete it when exit..
   -N, --no_coverage     Don't compute coverage statistics
 
 Candidate intervals:
@@ -49,8 +81,7 @@ Candidate intervals:
                         Cluster reads that are K nucleotides appart in the same node. Default: 500
 
 Insert size estimation options:
-  -ss , --sample_size   Number of concordant reads (R2F1) to use for estimating the insert size distribution.
-                        Default 100000
+  -ss , --sample_size   Number of concordant reads (R2F1) to use for estimating the insert size distribution. Default 100000
   -iq , --insert_mapq   Mapq cutoff for stimating the insert size distribution. Default 60
 
 Interval processing options:
@@ -85,4 +116,5 @@ Merge result options:
   -bs , --bases         Number of bases to extend for computing the coverage ratio. Default: 200
   -ce , --extension     Number of bases inside the eccDNA breakpoint coordinates to compute the ratio. Default: 100
   -r , --ratio          Minimum in/out required coverage ratio. Default: 0.0
+
 ```
