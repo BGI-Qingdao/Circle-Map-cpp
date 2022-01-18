@@ -12,16 +12,35 @@ see https://github.com/iprada/Circle-Map and https://github.com/BGI-Qingdao/Circ
   * g++
   * make
 * htslib
+* zlib
+* bzip2
+* xz
 * python3 with libraries 
   * pysam
   * argparse
   * numpy
+  * bedtools
   
 ## install 
 
+1. you should firstly compile htslib according to this instructions : [Install](https://github.com/samtools/htslib/blob/develop/INSTALL)
+
+2. then add the htslib to your $ENV like this:
+```bash
+export C_INCLUDE_PATH="your htslib path/include":$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH="your htslib path/include":$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH="your htslib path/lib":$LIBRARY_PATH
+export LD_LIBRARY_PATH="your htslib path/lib":$LD_LIBRARY_PATH
 ```
+3. next,make file
+```bash
 make
 ```
+
+4. the prior pipeline will compile `realign_cm.cpp`, `merge_result.cpp` and `edlib`,so if you have all the dependences listed in this page, you will finish installing!
+
+
+## NOTE: please notice your RAM! because we load all the IO files created by original Circle-Map to the RAM, so We will use more RAM than Circle-Map.Actually if you have a deep sequencing of circle-seq, you will use more than 70Gb RAM! 
 
 ## basic usage 
 
