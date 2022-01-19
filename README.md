@@ -1,5 +1,8 @@
 # Circle-Map-cpp
-rewrite part of in Circle-Map by c++
+Circle-Map is a good tool to detected thousands of extrachromosomal circular DNA(eccDNA). Thanks for this tool that we can easily got eccDNA from Circle-Seq data!
+But Circle-map realigner have very low performence because it use python and it also have some errors in it's result especially the start site will also incorrectly add 1bp.
+
+So we use **C++ to rewrite** Realiger and also **corrected all the errors** in it's result! **Welcome to try and give me some issues !**
 
 ## what is Circle-Map ?
 
