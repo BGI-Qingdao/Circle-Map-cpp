@@ -22,7 +22,7 @@ see https://github.com/iprada/Circle-Map and https://github.com/BGI-Qingdao/Circ
   * pysam
   * argparse
   * numpy
-  * bedtools
+* bedtools
   
 ## install 
 
