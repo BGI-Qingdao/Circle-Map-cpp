@@ -1,6 +1,7 @@
 # Circle-Map-cpp
-Circle-Map is a good tool to detected thousands of extrachromosomal circular DNA(eccDNA). Thanks for this tool that we can easily got eccDNA from Circle-Seq data!
-But Circle-map realigner have very low performence because it use python and it also have some errors in it's result especially the start site will also incorrectly add 1bp.
+Circle-Map is a good tool to detect thousands of extrachromosomal circular DNA (eccDNA). Thanks to this tool, we can easily get eccDNA from Circle-Seq data!
+
+But Circle-map realigner has very low performance because it uses Python and it also has some errors in its result, especially at the start site, which will incorrectly add 1 bp.
 
 So we use **C++ to rewrite** Realiger and also **corrected all the errors** in it's result! **Welcome to try and give me some issues !**
 
@@ -43,7 +44,7 @@ make
 4. the prior pipeline will compile `realign_cm.cpp`, `merge_result.cpp` and `edlib`,so if you have all the dependences listed in this page, you will finish installing!
 
 
-## NOTE: please notice your RAM! because we load all the IO files created by original Circle-Map to the RAM, so We will use more RAM than Circle-Map.Actually if you have a deep sequencing of circle-seq, you will use more than 70Gb RAM! 
+## Please take note of your RAM! we load all the IO files created by the original Circle-Map into the RAM, we will use more RAM than the Circle-Map. Actually, if you have a deep sequencing of circle-seq, you will use more than 70 GB of RAM! Don't use ReadExtractor multithreads mode! pysam multithreads use too much memory but have a limited decrease in time!
 
 ## basic usage 
 
