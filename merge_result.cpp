@@ -267,8 +267,8 @@ struct eccCache
             for(size_t i = ext_cov.size() > size_t(ilen+ext) ? ext_cov.size()-ilen-ext-1 : 0; i<ext_cov.size() ; i++)
                  cov_end_ext += ext_cov[i];
 
-            if( cov_start_ext > 0.0 ) begin_ratio = cov_start_in/cov_start_ext;
-            if( cov_end_ext >0.0 ) end_ratio = cov_end_in/cov_end_ext;
+            if( cov_start_ext > 0.0 ) begin_ratio = cov_start_in/cov_start_ext; else begin_ratio=1.0f;
+            if( cov_end_ext >0.0 ) end_ratio = cov_end_in/cov_end_ext; else end_ratio=1.0f;
             int nonzero = 0;
             for(int x : in_cov) if( x>0 ) nonzero ++;
             contigunity = 1.0 - float(nonzero)/float(in_cov.size());
@@ -303,7 +303,7 @@ struct eccCache
         {
             std::string ref = pair.first;
             auto & cache = pair.second;
-            for(size_t i = 1 ; i<cache.size(); i++ )
+            for(size_t i = 0 ; i<cache.size(); i++ )
             {
                 
                 auto & ecc = cache[i];
@@ -327,7 +327,7 @@ struct eccCache
         {
             std::string ref = pair.first;
             auto & cache = pair.second;
-            for(size_t i = 1 ; i<cache.size(); i++ )
+            for(size_t i = 0 ; i<cache.size(); i++ )
             {
                 auto & ecc = cache[i];
                 if(ecc.begin_ratio > ratio || ecc.end_ratio > ratio )
@@ -345,7 +345,7 @@ struct eccCache
         {
             std::string ref = pair.first;
             auto & cache = pair.second;
-            for(size_t i = 1 ; i<cache.size(); i++ )
+            for(size_t i = 0 ; i<cache.size(); i++ )
             {
                 auto & ecc = cache[i];
                 if( ecc.valid ) 
@@ -365,7 +365,7 @@ struct eccCache
         {
             std::string ref = pair.first;
             auto & cache = pair.second;
-            for(size_t i = 1 ; i<cache.size(); i++ )
+            for(size_t i = 0 ; i<cache.size(); i++ )
             {
                 auto & ecc = cache[i];
                 if( ecc.valid ) 
