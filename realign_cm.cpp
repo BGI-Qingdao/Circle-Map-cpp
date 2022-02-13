@@ -355,7 +355,7 @@ struct MateInterval
     // for discordant interval
     hts_pos_t   reference_end_q;       // 0-base coordinate, exclude
     hts_pos_t   next_reference_end_q;  // 0-base coordinate, exclude
-                     
+
     std::string qname;
     // for sort algorithm
     // @NOTICE: ordered by next_reference_xxx, not reference_xxx
@@ -399,7 +399,7 @@ struct MateInterval
         if( item->core.tid != item->core.mtid ) return 0;
         // keep only_discordant == True
         is_softclip = is_softclip_read(item);
-        if( is_softclip && bam_aux_get(item,"SA") != NULL ) return 0;
+        if( is_softclip /*&& bam_aux_get(item,"SA") != NULL*/ ) return 0;
         // check discordant reads (R2F1 orientation, R2 read)
         if( bam_is_rev(item) && ! bam_is_mrev(item) && item->core.pos < item->core.mpos )
         {
@@ -586,13 +586,13 @@ struct scRead
             sc_info.headclip = true;
             copy_hts_seq(sc_info.seqs ,bam_get_seq(item),0,sc_len);
             copy_hts_qual(sc_info.qual,bam_get_qual(item),0,sc_len);
-        } 
+        }
         else
         {
             sc_info.headclip = false;
             copy_hts_seq(sc_info.seqs ,bam_get_seq(item),(item)->core.l_qseq-sc_len,sc_len);
             copy_hts_qual(sc_info.qual,bam_get_qual(item),(item)->core.l_qseq-sc_len,sc_len);
-        } 
+        }
         return 1;
     }
 };
@@ -653,7 +653,7 @@ struct all_caches
         chromesomes[std::string(ks->name.s)] = {0,0,NULL};
         kputsn(ks->seq.s,ks->seq.l, &(chromesomes[std::string(ks->name.s)]));
     }
-        
+
     public:
 
     void free_mates()
@@ -703,7 +703,7 @@ struct all_caches
          if(end >= hts_pos_t(itr->second.l)) end = hts_pos_t(itr->second.l)-1; 
          return upper(itr->second.s + start , end-start);
     }
-    
+
     //
     // @abstract: load candidate eccDNA.bam and cache 
     //                 a) mate intervals from discordant reads pair
@@ -731,7 +731,7 @@ struct all_caches
             {
                 hts_log_error("Create tpool failed");
                 exit(1);
-            }                                                   
+            }
             hts_set_opt(in,  HTS_OPT_THREAD_POOL, &p);
         }
         // handle alignment one by one
@@ -779,7 +779,7 @@ struct all_caches
         hts_log_info("total mate intervals : %llu ",total);
         return ;
     }
-    
+
 } caches;
 
 /* ************************************************************************
@@ -816,7 +816,7 @@ struct eccFinal
       * 
       * @return: true if add succ due to temp equal with this.
       *          false otherwise.
-      */  
+      */
      bool try_add_next(const eccTemp & temp)
      {
          //check overlap
@@ -861,12 +861,12 @@ struct discordant
 
      /*
       * @abstract: check if temp is overlap with this
-      * 
+      *
       * @notice: please add ordered data
-      * 
+      *
       * @return: true if add succ due to temp overlap with this.
       *          false otherwise.
-      */  
+      */
      bool try_add_next(const MateInterval & temp)
      {
           if( temp.is_softclip ) return true ; // skip all softclip pair
@@ -924,7 +924,7 @@ struct ReAlignItem
     int realign_interval_valid;
     private:
     MateType all_type ;
-    
+
     public:
     // for sort algorithm
     bool operator <(const ReAlignItem & o) const { return begin < o.begin || (begin==o.begin && end < o.end) ; }
@@ -953,7 +953,6 @@ struct ReAlignItem
             realign_interval.push_back(mate_intervals[0]);
             realign_interval[0].prob = 1.0;
             all_type = realign_interval[0].type;
-            
             return 1;
         }
         // sort by mate_reference_pos
@@ -962,7 +961,7 @@ struct ReAlignItem
         std::vector<MateInterval> candidate_mate_intervals;
         MateInterval temp = mate_intervals.at(0);
         all_type = temp.type;
-	for(size_t i = 1; i < mate_intervals.size(); i++)
+        for(size_t i = 1; i < mate_intervals.size(); i++)
         {
             const auto & curr = mate_intervals.at(i);
             if ( curr.type != all_type ) all_type =  MateType::BothHook;
@@ -999,7 +998,7 @@ struct ReAlignItem
                 realign_interval.push_back(mi);
                 ret = 1;
             }
-        }   
+        }
         return ret;
     }
     //
@@ -1163,7 +1162,6 @@ struct ReAlignItem
                         //if( fecc.cut_begin == 7918273 && fecc.cut_end == 7918655 )
                         //    std::cerr<<mi.qname<<std::endl;
                     }
-                   
                 }
                 else
                 {
@@ -1186,7 +1184,7 @@ struct ReAlignItem
             //    for(const auto x :d_qnames)std::cerr<<x<<std::endl;
         }
     }
-    
+
     void discordant_only()
     {
         discordant temp;
@@ -1208,7 +1206,7 @@ typedef std::vector<region_position>  region_of_chromesome;
 struct all_region
 {
     std::map<std::string, region_of_chromesome> chromesomes;
-    
+
     //
     // @abstract: load chunked candidate intervals from peak.bed and sort them by coordinate
     // 
@@ -1240,8 +1238,8 @@ struct all_region
             }
         }
         hts_log_info("peaks.bed intervals : %llu" ,total);
-        regidx_destroy(idx);                                                    
-        regitr_destroy(itr);                                                    
+        regidx_destroy(idx);
+        regitr_destroy(itr);
         total = 0;
         for( auto & itr : chromesomes) 
         { 
@@ -1580,7 +1578,6 @@ float pssm(const std::string & seq, const std::vector<uint8_t> & qual,
         ret_score -= gap_open + gap_extend*(gap_len-1);
         gap_len=0;
     }
-    
     return ret_score;
 }
 
@@ -1625,7 +1622,7 @@ void realign_scs(std::string chrname ,ReAlignItem * item)
                      EdlibAlignTask::EDLIB_TASK_PATH,
                      NULL,
                      0};
-                 
+
                  std::string used_ref;
                  AGCTFreq used_ref_freq;
                  //if( s.is_reverse )
