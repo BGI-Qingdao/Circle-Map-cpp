@@ -155,9 +155,8 @@ class readExtractor:
         #print(my_cmd,flush=True)
         os.system(my_cmd)
         end = time.time()
-        if self.verbose >=3:
-            print("finished extracting reads. Elapsed time:", (end - begin) / 60, "mins")
-            print("Thanks for using Circle-Map-cpp")
+        print("finished extracting reads. Elapsed time:", (end - begin) / 60, "mins")
+        print("Thanks for using Circle-Map-cpp")
 
 ###############################################################################
 # generate peak.bed
