@@ -399,7 +399,7 @@ struct MateInterval
         if( item->core.tid != item->core.mtid ) return 0;
         // keep only_discordant == True
         is_softclip = is_softclip_read(item);
-        if( is_softclip /*&& bam_aux_get(item,"SA") != NULL*/ ) return 0;
+        if( is_softclip && bam_aux_get(item,"SA") != NULL ) return 0;
         // check discordant reads (R2F1 orientation, R2 read)
         if( bam_is_rev(item) && ! bam_is_mrev(item) && item->core.pos < item->core.mpos )
         {
