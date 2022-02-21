@@ -44,7 +44,7 @@ make
 4. the prior pipeline will compile `realign_cm.cpp`, `merge_result.cpp` and `edlib`,so if you have all the dependences listed in this page, you will finish installing!
 
 
-## Please take note of your RAM! we load all the IO files created by the original Circle-Map into the RAM, we will use more RAM than the Circle-Map. Actually, if you have a deep sequencing of circle-seq, you will use more than 70 GB of RAM! Don't use ReadExtractor multithreads mode! pysam multithreads use too much memory but have a limited decrease in time!
+**Please take note of your RAM! we load all the IO files created by the original Circle-Map into the RAM, we will use more RAM than the Circle-Map. Actually, if you have a deep sequencing of circle-seq, you will use more than 70 GB of RAM!**
 
 ## basic usage 
 
