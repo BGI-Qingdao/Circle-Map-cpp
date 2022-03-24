@@ -533,6 +533,12 @@ struct eccTemp
             cut_begin = leftmost_sa -1 ; // 0base
             cut_end = pos_end; 
         }
+        else 
+        {
+            free(sa_tmp.s);
+            free(offset);
+            return 0;
+        }
         free(sa_tmp.s);
         free(offset);
         return 1;
