@@ -241,6 +241,8 @@ inline bool non_colinearity(bool headclip, hts_pos_t pos, hts_pos_t realign_begi
 
 std::string upper(const char *line, int size)
 {
+    if (size <= 0)
+        return "";
     std::string ret ;
     ret.resize(size,'N');
     for(int i = 0 ; i<size ; i++)
@@ -701,12 +703,13 @@ struct all_caches
          const auto & itr =  chromesomes.find(chrname);
          if( itr == chromesomes.end() )
          {
-              hts_log_error("Error: genome not match bam!  \"%s\" not found. exit... ", chrname.c_str());
+              hts_log_error("Warning : genome not match bam!  \"%s\" not found. Ignore it ... ", chrname.c_str());
               return "";
          }
          if (end<= start) return "";
          if(start < 0 ) return "";
          if(end >= hts_pos_t(itr->second.l)) end = hts_pos_t(itr->second.l)-1; 
+         if (end<= start) return "";
          return upper(itr->second.s + start , end-start);
     }
 
