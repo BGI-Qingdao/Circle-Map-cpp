@@ -267,11 +267,11 @@ def merge_result(args):
 class circle_map_cpp:
     def __init__(self):
         self.parser = argparse.ArgumentParser(
-            description='circle-map++',
+            description='circle_map++',
             usage='''
 Brief: the circle_map++ suite, version=0.2.2
 
-Usage: circle-map++ <subprogram> [options]
+Usage: circle_map++ <subprogram> [options]
 
 Commands:
    ReadExtractor   Extracts circular DNA read candidates
@@ -283,20 +283,20 @@ Commands:
         self.realigner = subparsers.add_parser(
             name="Realign",
             description='Realign circular DNA read candidates',
-            prog="circle-map++ Realign",
-            usage='''circle-map++ Realign [options]'''
+            prog="circle_map++ Realign",
+            usage='''circle_map++ Realign [options]'''
             )
         self.readextractor = subparsers.add_parser(
             name="ReadExtractor",
             description='Extracts circular DNA read candidates',
-            prog="circle-map++ ReadExtractor",
-            usage='''circle-map++ ReadExtractor [options]'''
+            prog="circle_map++ ReadExtractor",
+            usage='''circle_map++ ReadExtractor [options]'''
         )
 
         if len(sys.argv) <= 1:
             self.parser.print_help()
             time.sleep(0.01)
-            sys.stderr.write("\nNo argument given to circle-map++"
+            sys.stderr.write("\nNo argument given to circle_map++"
                                  "\nExiting\n")
             sys.exit(0)
 
