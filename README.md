@@ -49,7 +49,7 @@ make
 ## basic usage 
 
 ```
-Usage: circle-map++ <subprogram> [options]
+Usage: circle_map++ <subprogram> [options]
 
 Commands:
    ReadExtractor   Extracts circular DNA read candidates
@@ -59,7 +59,7 @@ Commands:
 ## ReadExtractor usage
 
 ```
-usage: circle-map++ ReadExtractor [options]
+usage: circle_map++ ReadExtractor [options]
 
 Extracts circular DNA read candidates
 
@@ -83,7 +83,7 @@ optional arguments:
 ## Realign usage
 
 ```
-usage: circle-map++ Realign [options]
+usage: circle_map++ Realign [options]
 
 Realign circular DNA read candidates
 
