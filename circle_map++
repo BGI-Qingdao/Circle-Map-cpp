@@ -140,7 +140,7 @@ class readExtractor:
         circle_sv_reads = self.working_dir + "/" + self.output_bam 
         #timing
         begin = time.time()
-        my_cmd = config_tool_path + "/read_extractor " + ' '.join([str(i) for i in [
+        my_cmd = config_tool_path + "/circlemapcppbin/read_extractor " + ' '.join([str(i) for i in [
             '-i',raw_bam,
             '-o',circle_sv_reads,
             '-t',threads,
@@ -166,7 +166,7 @@ def candidate_intervals(args):
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:"),"skip candidate_intervals, use previous data\n",flush=True)   
     else:
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:"),"start candidate_intervals\n",flush=True)   
-        os.system(config_tool_path + "/thirdparty/megadepth " + ' '.join([str(i) for i in[
+        os.system("megadepth " + ' '.join([str(i) for i in[
             args.i,
             ' --coverage '			,
             ' --prefix '  			, args.directory + "/sort_candidate_bam"
@@ -185,7 +185,7 @@ def realign_cm(args, mean, std):
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:"),"skip realign_cm, use previous data\n",flush=True)   
     else:
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:"),"start realign_cm\n",flush=True)   
-        os.system(config_tool_path + "/realign_cm " + ' '.join([str(i) for i in [
+        os.system(config_tool_path + "/circlemapcppbin/realign_cm " + ' '.join([str(i) for i in [
             '-c',args.i,
             '-b',args.directory + "/peaks.bed",
             '-g',args.fasta,
@@ -213,7 +213,7 @@ def get_sbam_coverage(args):
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:"),"skip megadepth, use previous data\n",flush=True)   
     else:
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:"),"start megadepth\n",flush=True)   
-        os.system(config_tool_path + "/thirdparty/megadepth " + ' '.join([str(i) for i in[
+        os.system("megadepth " + ' '.join([str(i) for i in[
             args.sbam,
             ' --coverage '			,
             ' --prefix '  			, args.directory + "/sort_bam"
@@ -228,7 +228,7 @@ def get_sbam_coverage(args):
 def merge_result(args):
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:"),"merge result\n",flush=True)   
     if args.no_coverage :
-        os.system(config_tool_path + "/merge_result " + ' '.join([str(i) for i in [
+        os.system(config_tool_path + "/circlemapcppbin/merge_result " + ' '.join([str(i) for i in [
             '-c',args.directory + "/sort_bam.coverage.tsv ",
             '-g',args.fasta,
             '-i',args.directory + "/ecctemp.txt",
@@ -244,8 +244,8 @@ def merge_result(args):
             '-r',args.ratio,
             '-N'
              ]]))
-    else:    
-        os.system(config_tool_path + "/merge_result " + ' '.join([str(i) for i in [
+    else:
+        os.system(config_tool_path + "/circlemapcppbin/merge_result " + ' '.join([str(i) for i in [
             '-c',args.directory + "/sort_bam.coverage.tsv ",
             '-g',args.fasta,
             '-i',args.directory + "/ecctemp.txt",
