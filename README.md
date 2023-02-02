@@ -26,6 +26,10 @@ see https://github.com/iprada/Circle-Map and https://github.com/BGI-Qingdao/Circ
 * bedtools
   
 ## install 
+```
+conda install -c bioconda circle-map-cpp
+```
+
 
 1. you should firstly compile htslib according to this instructions : [Install](https://github.com/samtools/htslib/blob/develop/INSTALL)
 
