@@ -5,12 +5,12 @@ But Circle-map realigner has low performance because it uses Python. It also has
 
 So we **used C++ to rewrite Realiger** and also **corrected all the errors** in its result! **Welcome to try and give me some suggestion!**
 
-## what is Circle-Map?
+## What is Circle-Map?
 
 see https://github.com/iprada/Circle-Map and https://github.com/BGI-Qingdao/Circle-Map for details.
 
 
-## dependences
+## Dependences
 
 * c++ std11 compiler environment
   * g++
@@ -25,11 +25,37 @@ see https://github.com/iprada/Circle-Map and https://github.com/BGI-Qingdao/Circ
   * numpy
 * bedtools
   
-## install 
+## Install from conda
 ```
 conda install -c bioconda circle-map-cpp
 ```
 Or install from source codes:
+
+## Directly download and run a singularityCE image
+
+For how to build an image or other details, please see [panxiaoguang/Singularity_CircleMapPlus](https://github.com/panxiaoguang/Singularity_CircleMapPlus)
+
+```bash
+wget https://github.com/panxiaoguang/Singularity_CircleMapPlus/releases/download/0.0.4/panxiaoguang-Singularity_CircleMapPlus.latest.sif
+```
+
+**how to use?**
+
+ *If you already have a singularity program, just need to*
+ 
+ ```bash
+ ## for readExtractor
+ singularity exec panxiaoguang-Singularity_CircleMapPlus.latest.sif circle_map++ ReadExtractor -i qname_unknown_circle.bam -o circular_read_candidates.bam
+ ## for realign
+ singularity exec --bind /home/panxiaoguang/Genome/hg38_bwa/:/hg38_bwa panxiaoguang-Singularity_CircleMapPlus.latest.sif circle_map++ Realign -i sort_circular_read_candidates.bam -qbam qname_unknown_circle.bam -sbam  sorted_unknown_circle.bam -fasta /hg38_bwa/hg38.fa -o my_unknown_circle.bed
+ ## for more paramaters
+ singularity exec panxiaoguang-Singularity_CircleMapPlus.latest.sif circle_map++ --help
+ ```
+ Note you should use `--bind` to bind a local dir into img dir
+ 
+ *If you don't have a singularity program, you can install it or using conda version.*
+
+## Install from source
 
 1. you should firstly compile htslib according to this instructions : [Install](https://github.com/samtools/htslib/blob/develop/INSTALL)
 
