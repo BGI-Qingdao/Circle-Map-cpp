@@ -36,7 +36,7 @@ Or install from source codes:
 For how to build an image or other details, please see [panxiaoguang/Singularity_CircleMapPlus](https://github.com/panxiaoguang/Singularity_CircleMapPlus)
 
 ```bash
-wget https://github.com/panxiaoguang/Singularity_CircleMapPlus/releases/download/0.0.4/panxiaoguang-Singularity_CircleMapPlus.latest.sif
+wget https://github.com/panxiaoguang/Singularity_CircleMapPlus/releases/download/0.0.5/panxiaoguang-Singularity_CircleMapPlus.latest.sif
 ```
 
 **how to use?**
