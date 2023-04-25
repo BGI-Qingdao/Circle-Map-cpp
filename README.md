@@ -1,3 +1,6 @@
+# update:
+There is a pipeline for calling eccDNA based on this software and singularity, please see [panxiaoguang/Circle-Map-Cpp_Pipeline](https://github.com/panxiaoguang/Circle-Map-Cpp_Pipeline)
+
 # Circle-Map-cpp
 Circle-Map is a great tool to detect thousands of extrachromosomal circular DNA (eccDNA). Thanks to this tool, we can easily get eccDNA from Circle-Seq data!
 
@@ -171,3 +174,4 @@ Merge result options:
   -r , --ratio          Minimum in/out required coverage ratio. Default: 0.0
 
 ```
+
