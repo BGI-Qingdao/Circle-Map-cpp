@@ -114,6 +114,42 @@ struct eccCache
         }
     };
 
+    /*
+     * @abstract: true if a and b overlap reciprocally by more than
+     *            merge_factor -- the same criterion the previous chained
+     *            merge applied to consecutive candidates, but stated for an
+     *            unordered pair.
+     */
+    static bool reciprocal_overlap(const EccTemp & a, const EccTemp & b)
+    {
+        int max_start = a.begin > b.begin ? a.begin : b.begin ;
+        int min_end   = a.end   < b.end   ? a.end   : b.end   ;
+        if( min_end <= max_start ) return false;
+        double len_a = double(a.end - a.begin);
+        double len_b = double(b.end - b.begin);
+        if( len_a <= 0.0 || len_b <= 0.0 ) return false;
+        double ov = double(min_end - max_start);
+        return ( ov/len_a + ov/len_b ) > 2.0*merge_factor ;
+    }
+
+    /* union-find over candidate indexes */
+    static size_t uf_find(std::vector<size_t> & parent, size_t x)
+    {
+        while( parent[x] != x )
+        {
+            parent[x] = parent[parent[x]];
+            x = parent[x];
+        }
+        return x;
+    }
+
+    static void uf_unite(std::vector<size_t> & parent, size_t a, size_t b)
+    {
+        size_t ra = uf_find(parent,a), rb = uf_find(parent,b);
+        if( ra == rb ) return ;
+        if( ra < rb ) parent[rb] = ra; else parent[ra] = rb;
+    }
+
     std::map<std::string,std::vector<EccTemp>> temp_caches;
     
     void load(std::string in)
@@ -184,12 +220,10 @@ struct eccCache
         float begin_ratio;
         float end_ratio;
         float contigunity;
-        EccTemp prev;
     
         void init(const EccTemp & temp)
         {
             valid = false;
-            prev = temp;
             if(!temp.valid) return ;
             valid = true;
             begin = temp.begin;
@@ -204,29 +238,19 @@ struct eccCache
             contigunity = -1;
         }
     
-        bool add(const EccTemp & temp)
+        /*
+         * @abstract: fold another member of the same cluster into this one.
+         *            The accumulation is the one the chained merge used when
+         *            it accepted an interval.
+         */
+        void absorb(const EccTemp & temp)
         {
-            if(!valid)
-            {
-                init(temp);
-                return true;
-            }
-            if(!temp.valid)
-                return true;
-            double max_start = temp.begin;//sorted input
-            double min_end = prev.end < temp.end ? prev.end :temp.end;
-            double mf = (double(min_end - max_start) / double(prev.end-prev.begin)) +
-                        (double(min_end - max_start) / double(temp.end-temp.begin));
-            if( mf > 2.0*merge_factor )
-            {
-                prev = temp;
-                if(temp.ndiscordant > ndiscordant) ndiscordant = temp.ndiscordant;
-                if(temp.end > end) end = temp.end;
-                nsplit += temp.nsplit;
-                score += temp.score;
-                return true;
-            }
-            return false;
+            if(!temp.valid) return ;
+            if(temp.begin < begin) begin = temp.begin;
+            if(temp.end > end) end = temp.end;
+            if(temp.ndiscordant > ndiscordant) ndiscordant = temp.ndiscordant;
+            nsplit += temp.nsplit;
+            score += temp.score;
         }
         void update(const std::vector<int> & in_cov,const std::vector<int> & ext_cov)
         {
@@ -276,23 +300,82 @@ struct eccCache
     };
 
     std::map<std::string , std::vector<eccFinal>>  eccs;
+    /*
+     * @abstract: group the candidates of each reference into clusters of
+     *            reciprocally overlapping intervals and emit one interval per
+     *            cluster.
+     *
+     * @notice: this used to walk the sorted candidates as a single chain,
+     *          restarting the chain on every candidate that could not be added
+     *          to it. That made the result depend on what sorts between two
+     *          mergeable candidates: an unrelated interval in the middle reset
+     *          the chain, and the candidates on either side of it were emitted
+     *          separately even though they overlap each other by more than
+     *          merge_factor. A spurious multi-megabase interval is the loudest
+     *          way to trigger it -- on a rice eccDNA sample one such interval
+     *          sitting between Chr4:1780904-1781292 (split=22) and
+     *          Chr4:1780906-1781294 (split=6) kept them apart instead of
+     *          merging them into Chr4:1780904-1781294 (split=28) -- but any
+     *          candidate that fails the overlap test does it.
+     *
+     *          Clustering is independent of the order in which candidates are
+     *          visited, so a candidate that merges with nothing no longer
+     *          changes how its neighbours merge.
+     */
     void merge()
     {
         for(auto & pair :temp_caches)
         {
             std::string ref = pair.first;
             auto & cache = pair.second;
-            eccFinal temp;
-            temp.init(cache[0]);
-            for(size_t i = 1 ; i<cache.size(); i++ )
-            { 
-                if(!temp.add(cache[i]))
+            // invalid candidates take no part in merging, as before
+            std::vector<size_t> idx;
+            for(size_t i = 0 ; i<cache.size(); i++ )
+                if( cache[i].valid ) idx.push_back(i);
+            if( idx.empty() ) continue ;
+
+            std::vector<size_t> parent(idx.size());
+            for(size_t i = 0 ; i<parent.size(); i++ ) parent[i] = i;
+
+            // cache is sorted by begin. Reaching 2*merge_factor reciprocal
+            // overlap with a later candidate requires ov > (2f-1)*len_a and
+            // ov <= len_a - (b.begin - a.begin), hence
+            // b.begin - a.begin < (2-2f)*len_a. Once a later candidate starts
+            // beyond that, so does every candidate after it.
+            for(size_t i = 0 ; i<idx.size(); i++ )
+            {
+                const EccTemp & a = cache[idx[i]];
+                double reach = (2.0 - 2.0*merge_factor) * double(a.end - a.begin);
+                for(size_t j = i+1 ; j<idx.size(); j++ )
                 {
-                    eccs[ref].push_back(temp);
-                    temp.init(cache[i]);
+                    const EccTemp & b = cache[idx[j]];
+                    if( double(b.begin - a.begin) >= reach ) break ;
+                    if( reciprocal_overlap(a,b) ) uf_unite(parent,i,j);
                 }
             }
-            if(temp.valid) eccs[ref].push_back(temp);
+
+            std::map<size_t,eccFinal> clusters;
+            for(size_t i = 0 ; i<idx.size(); i++ )
+            {
+                size_t r = uf_find(parent,i);
+                auto it = clusters.find(r);
+                if( it == clusters.end() )
+                {
+                    eccFinal one;
+                    one.init(cache[idx[i]]);
+                    clusters.insert(std::make_pair(r,one));
+                }
+                else
+                    it->second.absorb(cache[idx[i]]);
+            }
+
+            std::vector<eccFinal> out;
+            out.reserve(clusters.size());
+            for(auto & c : clusters) out.push_back(c.second);
+            std::sort(out.begin(),out.end(),
+                      [](const eccFinal & x, const eccFinal & y)
+                      { return x.begin < y.begin || (x.begin == y.begin && x.end < y.end); });
+            for(auto & c : out) eccs[ref].push_back(c);
         }
     }
 
