@@ -239,8 +239,8 @@ def merge_result(args):
             '-d',args.number_of_discordants,
             '-s',args.split_quality,
             '-f',args.merge_fraction,
-            '-e',args.extension,
-            '-l',args.bases,
+            '-e',args.bases,
+            '-l',args.extension,
             '-r',args.ratio,
             '-N'
              ]]))
@@ -255,8 +255,8 @@ def merge_result(args):
             '-d',args.number_of_discordants,
             '-s',args.split_quality,
             '-f',args.merge_fraction,
-            '-e',args.extension,
-            '-l',args.bases,
+            '-e',args.bases,
+            '-l',args.extension,
             '-r',args.ratio,
             '-o',args.output]]))
 
